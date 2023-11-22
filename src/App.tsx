@@ -1,10 +1,10 @@
+import { Player } from './pages/Player'
+
 function App() {
   return (
-    <>
-      <main>
-        <h1>Hello</h1>
-      </main>
-    </>
+    <main>
+      <Player />
+    </main>
   )
 }
 
