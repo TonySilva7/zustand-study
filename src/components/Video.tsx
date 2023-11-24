@@ -1,16 +1,19 @@
-import ReactPlayer from 'react-player'
-import { next, selectCurrentLesson, selectPlayer } from '../features/player'
-import { useAppDispatch, useAppSelector } from '../store/hooks'
 import { Loader } from 'lucide-react'
+import ReactPlayer from 'react-player'
+import { useCurrentLesson, useStore } from '../zustand-store'
 
 export function Video() {
-  const dispatch = useAppDispatch()
+  const { currentLesson } = useCurrentLesson()
 
-  const { currentLesson } = useAppSelector(selectCurrentLesson)
-  const { isLoading } = useAppSelector(selectPlayer)
+  const { isLoading, next } = useStore((store) => {
+    return {
+      isLoading: store.isLoading,
+      next: store.next,
+    }
+  })
 
   function handlePlayNext() {
-    dispatch(next())
+    next()
   }
 
   if (!currentLesson) return null
