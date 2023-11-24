@@ -1,4 +1,4 @@
-import todoSlice from '../features/todo'
+import { player } from '../features/player'
 
 import {
   Action,
@@ -10,7 +10,7 @@ import {
 
 // Create the root reducer independently to obtain the RootState type
 const rootReducer = combineReducers({
-  todoReducer: todoSlice,
+  player,
 })
 
 export type RootState = ReturnType<typeof rootReducer>
