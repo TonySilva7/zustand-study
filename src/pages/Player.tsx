@@ -4,20 +4,30 @@ import { ComponentProps, useEffect } from 'react'
 import { Header } from '../components/Header'
 import { Module } from '../components/Module'
 import { Video } from '../components/Video'
-import { useAppSelector } from '../store/hooks'
-import { selectPlayer } from '../features/player'
-import { useCurrentLesson } from '../hooks/useCurrentLesson'
+import {
+  loadCourse,
+  selectCurrentLesson,
+  selectPlayer,
+} from '../features/player'
+import { useAppDispatch, useAppSelector } from '../store/hooks'
 
 type PlayerProps = ComponentProps<'div'>
 
 function Player({ ...props }: PlayerProps) {
+  const dispatch = useAppDispatch()
   const { course } = useAppSelector(selectPlayer)
-  const modules = course.modules
+  const modules = course?.modules
 
-  const { currentLesson } = useCurrentLesson()
+  const { currentLesson } = useAppSelector(selectCurrentLesson)
 
   useEffect(() => {
-    document.title = `Assistindo: ${currentLesson.title}`
+    dispatch(loadCourse())
+  }, [dispatch])
+
+  useEffect(() => {
+    if (currentLesson) {
+      document.title = `Assistindo: ${currentLesson.title}`
+    }
   }, [currentLesson])
 
   return (
@@ -41,16 +51,17 @@ function Player({ ...props }: PlayerProps) {
           </div>
 
           <aside className="w-80 absolute top-0 bottom-0 right-0 border-l divide-y-2 divide-zinc-900 border-zinc-800 bg-zinc-900 overflow-y-scroll scrollbar-thin scrollbar-track-zinc-950 scrollbar-thumb-zinc-800">
-            {modules.map((module, index) => {
-              return (
-                <Module
-                  key={module.id}
-                  moduleIndex={index}
-                  title={module.title}
-                  amountOfLessons={module.lessons.length}
-                />
-              )
-            })}
+            {modules &&
+              modules.map((module, index) => {
+                return (
+                  <Module
+                    key={module.id}
+                    moduleIndex={index}
+                    title={module.title}
+                    amountOfLessons={module.lessons.length}
+                  />
+                )
+              })}
           </aside>
         </main>
       </div>
